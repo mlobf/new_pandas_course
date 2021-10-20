@@ -1,6 +1,8 @@
-from re import I
+
+#%%
 import pandas as pd
 import numpy as np
+#%%
 
 df = pd.read_csv("AB_NYC_2019.csv")
 
@@ -18,5 +20,4 @@ df3 = df.groupby("room_type").mean()
 
 # Going back to standard index mode
 # df3 = df3.reset_index()
-
-print(df3)
+print(df.head(5))
