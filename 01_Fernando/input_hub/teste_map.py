@@ -1,3 +1,4 @@
+from cmath import log
 import os
 from datetime import datetime
 import logging
@@ -45,7 +46,7 @@ def check_empresa(_):
         # print('E da empresa Natura!')
         pass
     else:
-        print('Empresa nao cadastrada ' + _)
+        logging.debug(('Empresa nao cadastrada ' + _))
 
 
 def check_pais(_):
@@ -59,7 +60,7 @@ def check_nome_arquivo(_):
     if _[7:16] in ARQUIVOS:
         pass
     else:
-        print('Este cara aqui nao esta na lista de arquivos-> ' + _)
+        logging.debug('Este cara aqui nao esta na lista de arquivos-> ' + _)
 
 
 def check_data_formato(_):
@@ -80,7 +81,7 @@ def check_data_formato(_):
 
     except Exception:
         # Usar a porcaria da lib de logging
-        print('Deu ruim data formato -> ' + _)
+        logging.debug('Deu ruim Data formato -> ' + _)
 
 
 def check_csv(_):
@@ -88,10 +89,10 @@ def check_csv(_):
     if _[-3:] in TIPO_ARQUIVOS:
         pass
     else:
-        print('Este cara aqui tipo csv-> ' + _)
+        logging.debug('Este cara aqui tipo csv-> ' + _)
 
 
-# Run
+# ---------------------------------------------------------------------------------
 def check_path_files(files: list = []) -> str:
     for _ in files:
         print('----------------------')
@@ -111,7 +112,7 @@ for y in range(1, 12):
 
 """
 # print(((datetime.today()).year))
-print((datetime.today()).year)
+logging.debug((datetime.today()).year)
 
 
 # print(((datetime.today()).year))

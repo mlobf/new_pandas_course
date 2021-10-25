@@ -96,7 +96,8 @@ current_dir = os.getcwd()
 
 # To split the root and the filename.
 the_path = '/home/mlobf/text.txt'
-# print(os.path.splitext(the_path)[0])
+print(os.path.splitext(the_path)[0])
+print(os.path.splitext(the_path)[1])
 
 # Para checar o tipo de arquivo.
 # print((os.path.splitext(the_path)[1]))
@@ -106,7 +107,7 @@ the_path = '/home/mlobf/text.txt'
 my_generator = os.walk(the_path)
 
 
-print(my_generator.__next__())
+# print(my_generator.__next__())
 
 for x in my_generator:
     print(str(x))
