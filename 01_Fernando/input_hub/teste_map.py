@@ -1,91 +1,85 @@
 import os
+from datetime import datetime
+from tkinter import W
+
 
 EMPRESAS = ['nat', 'tbs', 'avn']
 PAISES = ['br', 'ar', 'pe', 'ch', 'co']
-ARQUIVOS = ['links', 'input_crm', 'input_hub', 'output_hub', 'output_crm']
+ARQUIVOS = ['links.csv', 'input_crm', 'input_hub', 'output_hub', 'output_crm']
+TIPO_ARQUIVOS = ['csv']
 
-"""
-    Ir para a pasta onde estao os csv s e validar:
-        1-Se é csv / py ;
-        2-Se possui a seguinte composição:
-            a-nat
-            b-br/ar/.....
-            c-input_crm/input_hub/output_hub/links
-            d-data no formato de ano 2021 + mes 10 + dia 05.
-"""
 
 path = os.path.dirname(os.path.abspath(__file__))
 path_files = os.listdir(path + '/arquivos')
-# print(path_files)
-
-# 1-Se é csv, se é py ou é uma pasta;
 
 
-def check_csv(files: list = []) -> str:
-    for _ in files:
-        if _[-3:] == '.py':
-            print('E python !')
-        elif _[-4:] == '.csv':
-            print('E csv!')
+def check_empresa(_):
+    if _[:3] in EMPRESAS:
+        # print('E da empresa Natura!')
+        pass
+    else:
+        print('Empresa nao cadastrada')
 
 
-# Run
-# check_csv(path_files)
-"""
-2-Se possui a seguinte composição:
-    a-nat
-    b-br/ar/.....
-    c-input_crm/input_hub/output_hub/links
-    d-data no formato de ano 2021 + mes 10 + dia 05.
-"""
-
-# EMPRESAS = ['nat', 'tbs', 'avn']
-# filtred_fruits = filter(lambda fruit: fruit.startswith("a") == True, fruits)
+def check_pais(_):
+    if _[4:6] in PAISES:
+        # print('E do pais operado ' + _[4:6])
+        pass
 
 
-def check_empresa(var):
-    if var[:3] in EMPRESAS:
-        print('E da empresa Natura!')
+def check_nome_arquivo(_):
+    # print(_[7:16])
+    if _[7:16] in ARQUIVOS:
+        pass
+    else:
+        print('Este cara aqui nao esta na lista de arquivos-> ' + _)
 
 
-def check_pais(var):
-    print(var[4:6])
-    if var[4:6] in PAISES:
-        print('E do pais operado' + var[4:6])
+def check_data_formato(_):
+    # Separar a data na str
+    # print(_[-12:-4])  # Toda a data
+    # So pode valer para os tipo csvs
+    try:
+        # Validar o input da data
+        int(_[-12:-4])
+        # Ano
+        print((datetime.today()).year)
+        _[-12:-8] in range(2021, 2029) == True
+        # Mês
+        _[-8:-6] in range(1, 12) == True
+        # Dia
+        _[-6:-4] in range(1, 31) == True
+
+    except Exception:
+        print('Deu ruim data formato -> ' + _)
+
+
+def check_csv(_):
+    # print(_[-3:])
+    if _[-3:] in TIPO_ARQUIVOS:
+        pass
+    else:
+        print('Este cara aqui tipo csv-> ' + _)
 
 
 def check_path_files(files: list = []) -> str:
     for _ in files:
-
-        # Checar a Empresa
-        #print(" O pais e => ", _[4:6])
-
-        check_empresa(_)
-        check_pais(_)
-
-        # check_arquivo(_)
-        """
-        
-        # Checar o Pais
-        elif _[4:6] in PAISES:
-            print('E do pais operado' + _[4:6])
-        # Checar a Arquivo
-        elif _[-4:] == '.csv':
-            pass
-        # Checar a Data
-        elif _[-4:] == '.csv':
-            pass
-        """
+        print('----------------------')
+        # check_empresa(_)
+        # check_pais(_)
+        check_nome_arquivo(_)
+        check_data_formato(_)
+        check_csv(_)
+        print(' ')
 
 
-check_path_files(path_files)
+# check_path_files(path_files)
+"""
+for y in range(1, 12):
+    print(y)
 
-# print(os.path.splitext(mypath)[0])
-
-# print(mypath)
-
-# print(os.getcwd())  # ok
-
-# print(r)
-
-#file_path = os.path.join(mypath, '/arquivos/')
+"""
+print(type((datetime.today()).year))
+print(type((datetime.today()).year))
+print(type((datetime.today()).year))
+print(type((datetime.today()).year))
