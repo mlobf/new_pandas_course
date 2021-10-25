@@ -113,6 +113,7 @@ for y in range(1, 12):
 """
 # print(((datetime.today()).year))
 logging.debug((datetime.today()).year)
+logging.debug((datetime.today()).year)
 
 
 # print(((datetime.today()).year))
