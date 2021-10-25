@@ -1,4 +1,9 @@
 import pandas as pd
+import os
+
+
+print(os.path.dirname(os.path.abspath(__file__)))
+
 
 """
 	to do:
@@ -27,18 +32,17 @@ import pandas as pd
         Baixar as planilhas modelo em uma pasta local para emular o funcionamento do programa,
         Criar uma estrutura de Diretorios para emular o funcionamento do programa.
 
-
-
-
 """
 
 ########################################################################################
 # trata chegada o evento (object) e cria variáveis para leitura/escrita do dataframe
 
-bucket_name = f"s3://{event['Records'][0]['s3']['bucket']['name']}/"
+
+# Marcos => Raiz no AWS
+# bucket_name = f"s3://{event['Records'][0]['s3']['bucket']['name']}/"
 
 # Verificar se o prefixo esta indo certo
-prefix_event = event['Records'][0]['s3']['object']['key']
+#prefix_event = event['Records'][0]['s3']['object']['key']
 
 file = prefix_event.split('/')[3]
 date_proccess = prefix_event.split('.')[0][-8:]
