@@ -13,4 +13,6 @@ df = pd.read_csv(filename_two)
 # print(df["age"].mean(), df["sex"].mean())
 
 # Printa na tela as colunas 'age' e 'sex' da tabela heart.csv
-print(df["age"], df["sex"])
+#print(df["age"], df["sex"])
+
+print(df)
