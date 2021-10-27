@@ -8,6 +8,7 @@ EMPRESAS = ['nat', 'tbs', 'avn']
 PAISES = ['br', 'ar', 'pe', 'ch', 'co']
 ARQUIVOS = ['links.csv', 'input_crm', 'input_hub', 'output_hub', 'output_crm']
 TIPO_ARQUIVOS = ['csv']
+PD = pb
 
 """
     to do:
@@ -21,24 +22,25 @@ TIPO_ARQUIVOS = ['csv']
             -nome do bucket
             ok - nome das variaveis
             ok - data da ocorrencia
-        - Checar se alinks esta preechida.
 
-        - Checar se input_crm esta preechida.
+        to do :
 
-
-        # Falta Fazer:
-
+            - Checar se alinks esta preechida.
+            - Checar se input_crm esta preechida.
             - checar se o total de columas do input_hub
             - é igual ao numero de colunas de output_hub
 
-        ok - Validar estrutura do arquivo empresa + pais + processo
+            ok - Validar estrutura do arquivo empresa + pais + processo
 
+            - Validar as nas planihas links e input_crm,
+                ser as colunas possuem os nomes - pre definidos - e nao possuem columas em branco.
 
-        - Validar as nas planihas links e input_crm,
-            ser as colunas possuem os nomes - pre definidos - e nao possuem columas em branco.
-
-        - Baixar as planilhas modelo em uma pasta local para emular o funcionamento do programa,
-        - Criar uma estrutura de Diretorios para emular o funcionamento do programa.
+        done:
+            - Realizar o import das planilhas.
+            - Validação por nome da empresa.
+            - Validação por nome do pais.
+            - Validação por tipo de arquivo.
+            - Validação por tipo de formatação de data.
 
 """
 
@@ -128,28 +130,59 @@ def check_n_col_inpuHub_outputHub():
     # df = pd.read_csv(p, sep=";")
 
 
-def check_n_col_inpuHub_outputHub2():
+# def read_file(file_name='nat_br_input_hub_CPC7_20210925.csv'):
+
+
+def check_csv_null(file_name):
+    import pandas as pd
+
+    df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+    df = df.isnull()
+    # print(df)
+
+    print(df[df == "Taz"])
+
+
+def read_file(file_name):
     import pandas as pd
     # path = os.path.dirname(os.path.abspath(__file__))
     # path_files = os.listdir(path + '/arquivos')
     # p = path + '/arquivos/nat_br_inputhub_CPC7_20210925.csv'
-    # p = 'heart.csv'  # Esta ok esta aqui
-    p = 'nat_br_input_hub_CPC7_20210925.csv'
+    # file_name = 'heart.csv'  # Esta ok esta aqui
     # p = 'nat_br_input_crm_20191005 .csv'  # Este aqui esta ok !!
+    #p = 'nat_br_input_hub_CPC7_20210925.csv'
+    # To check the files's encoding and
+    #   respective error handling
+
+    """
+        Sugestao do Douglas => chardet
+
+        Primeiro ver se o csv é realmente null.
+            Para tanto eu tenho que validar se a quantidade de Null que 
+                aparecera na planilha no tipo utc,  sera maior que not null em cada tipo de utc
+                Se o resultado for null para os tipos de utcs, entao a planilha é realmente null
+    """
 
     try:
-        df = pd.read_csv(p, encoding="utf-16", sep=";")
+        df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
     except:
-        df = pd.read_csv(p, encoding="utf-16", sep=";")
-        #df = pd.read_csv(p, encoding="ISO-8859-1", sep=";")
+        print('Deu ruim')
+        pass
+        #df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
 
-    try:
-        df = pd.read_csv(p, encoding="utf-16", sep=";")
-    except:
-        df = pd.read_csv(p, encoding="ISO-8859-1", sep=";")
+        '''
+
+        try:
+            df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+        except:
+            pass
+            # df = pd.read_csv(file_name, encoding="utf-16", sep=";")
+
+        '''
 
     else:
-        print(df)
+        return df
+
     # assert(pd.read_csv(p, encoding="ISO-8859-1", sep=";"))
     # df=pd.read_csv(p, encoding="ISO-8859-1", sep=";")
     # print(df)
@@ -159,6 +192,30 @@ def check_n_col_inpuHub_outputHub2():
     # df = pd.read_csv(p, encoding="utf-16", sep=";")
     # sep=';', index=False, encoding='utf-16')
     # df = pd.read_csv(p, sep=";")
+
+
+def checkColInpOutHubLen():
+    p1 = 'nat_br_input_hub_CPC7_20210925.csv'
+    p2 = 'nat_br_input_crm_20191005.csv'
+    #nat_br_input_crm_20191005 .csv
+    print(read_file(p2))
+    # print(p2)
+
+    '''
+    try:
+        df = pd.read_csv(p, encoding="utf-16", sep=";")
+    except:
+        df = pd.read_csv(p, encoding="utf-16", sep=";")
+        # df = pd.read_csv(p, encoding="ISO-8859-1", sep=";")
+
+    try:
+        df = pd.read_csv(p, encoding="utf-16", sep=";")
+    except:
+        df = pd.read_csv(p, encoding="ISO-8859-1", sep=";")
+
+    print(len(df.columns))
+    '''
+
 
 # ---------------------------------------------------------------------------------
 
@@ -176,23 +233,16 @@ def check_path_files(files: list = []) -> str:
 
 # check_path_files(path_files)
 
-"""
-for y in range(1, 12):
-    print(y)
-
-print(path)
-
-logging.basicConfig(filename='sample.log', level=logging.DEBUG)
-logger = logging.getLogger()
-# print(((datetime.today()).year))
-logging.debug((datetime.today()).year)
-logging.debug((datetime.today()).year)
+# check_n_col_inpuHub_outputHub2()
+# check_equal_col_inpOutHub()
+# checkColInpOutHubLen()
+#f = 'nat_br_input_crm_20191005 .csv'
 
 
-# ok rodando o log
-logging.warning('This is a warnning')
+# Esta lendo
 
-logger.info("Our fist message")
-# print(((datetime.today()).year))
-"""
-check_n_col_inpuHub_outputHub2()
+#f = 'nat_br_input_crm_20191005 .csv'
+
+f = 'nat_br_input_hub_CPC7_20210925.csv'
+# print(read_file(f))
+print(check_csv_null(f))
