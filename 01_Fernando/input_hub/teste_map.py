@@ -1,5 +1,8 @@
+from base64 import encode
+from fileinput import filename
 import os
 from re import A
+from turtle import pd
 from chardet import UniversalDetector
 from datetime import datetime
 import logging
@@ -10,13 +13,20 @@ EMPRESAS = ['nat', 'tbs', 'avn']
 PAISES = ['br', 'ar', 'pe', 'ch', 'co']
 ARQUIVOS = ['links.csv', 'input_crm', 'input_hub', 'output_hub', 'output_crm']
 TIPO_ARQUIVOS = ['csv']
+TIPOS_ENCODING = {
+    'utf-16': 'UTF-16',
+    'utf-8': 'ISO-8859-1'
+}
 PD = pb
 
 # ------------------------------------------------------------
 
 
-def detect_encoding(filename):
-
+def check_csv_enc_type(file_name: str) -> str:
+    """
+        Apresenta o tipo de encode do csv ou retorna uma mensagen de erro.
+    """
+    import pdb
     detector = UniversalDetector()
     with open(f, 'rb') as file:
         for line in file:
@@ -25,7 +35,13 @@ def detect_encoding(filename):
                 break
         detector.close()
         result = detector.result
-        print('Encoding: ' + str(result['encoding']) + '\n')
+        if result['confidence'] < 0.68:
+            # condicional para ver se a analise é boa.
+            # caso nao seja, interromper o processo e dar a mensagem de alerta.
+            # o valor de 0.68 corresponde a uma desvio padrao em relação a media.
+            return print('Falta confiança na analise da planilha ', file_name, ' Resultado da analise é', result['confidence'])
+        else:
+            return result['encoding']
 
 
 # ------------------------------------------------------------
@@ -278,4 +294,10 @@ f = 'nat_br_input_crm_20191005 .csv'
 # print(check_csv_null(f))
 
 # print(read_file(f))
-detect_encoding(f)
+# detect_encoding(f)
+
+
+# check_csv_enc_type(f)
+print(
+    check_csv_enc_type(f)
+)
