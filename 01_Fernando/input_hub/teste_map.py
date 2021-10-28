@@ -1,11 +1,13 @@
 from base64 import encode
 from fileinput import filename
+from json import detect_encoding
 import os
 from re import A
 from turtle import pd
 from chardet import UniversalDetector
 from datetime import datetime
 import logging
+from numpy import full
 import pandas as pb
 
 # Global
@@ -19,6 +21,38 @@ TIPOS_ENCODING = {
 }
 PD = pb
 
+"""
+    To do list:
+
+        ok - nome das variaveis
+        ok - data da ocorrencia
+
+    to do :
+
+        - Checar se alinks esta preechida.
+        - Checar se input_crm esta preechida.
+        - checar se o total de columas do input_hub
+        - é igual ao numero de colunas de output_hub
+
+        ok - Validar estrutura do arquivo empresa + pais + processo
+
+        - Validar as nas planihas links e input_crm,
+            ser as colunas possuem os nomes - pre definidos - e nao possuem columas em branco.
+
+        - Realizar o import das planilhas.
+        - Validação por nome da empresa.
+        - Validação por nome do pais.
+        - Validação por tipo de arquivo.
+        - Validação por tipo de formatação de data.
+
+    done:
+
+"""
+
+
+# path = os.path.dirname(os.path.abspath(__file__))
+# path_files = os.listdir(path + '/arquivos')
+# p = path + '/arquivos/nat_br_inputhub_CPC7_20210925.csv'
 # ------------------------------------------------------------
 
 
@@ -28,8 +62,14 @@ def check_csv_enc_type(file_name: str) -> str:
     """
     import pdb
     detector = UniversalDetector()
-    with open(f, 'rb') as file:
+    path = os.path.dirname(os.path.abspath(__file__))
+
+    full_path = path + '/arquivos'+'/' + file_name
+    # print(full_path)
+
+    with open(full_path, 'rb') as file:
         for line in file:
+            # pdb.set_trace()
             detector.feed(line)
             if detector.done:
                 break
@@ -41,50 +81,10 @@ def check_csv_enc_type(file_name: str) -> str:
             # o valor de 0.68 corresponde a uma desvio padrao em relação a media.
             return print('Falta confiança na analise da planilha ', file_name, ' Resultado da analise é', result['confidence'])
         else:
+            # para debugar
+            print(' ')
+            print("check_csv_enc_type ->", result['encoding'])
             return result['encoding']
-
-
-# ------------------------------------------------------------
-"""
-    to do:
-
-        Ver a lib de log python,
-                => validar se pode ser essa aqui logging.
-
-                Tutorial https://realpython.com/python-logging/
-
-
-            -nome do bucket
-            ok - nome das variaveis
-            ok - data da ocorrencia
-
-        to do :
-
-            - Checar se alinks esta preechida.
-            - Checar se input_crm esta preechida.
-            - checar se o total de columas do input_hub
-            - é igual ao numero de colunas de output_hub
-
-            ok - Validar estrutura do arquivo empresa + pais + processo
-
-            - Validar as nas planihas links e input_crm,
-                ser as colunas possuem os nomes - pre definidos - e nao possuem columas em branco.
-
-        done:
-            - Realizar o import das planilhas.
-            - Validação por nome da empresa.
-            - Validação por nome do pais.
-            - Validação por tipo de arquivo.
-            - Validação por tipo de formatação de data.
-
-"""
-
-path = os.path.dirname(os.path.abspath(__file__))
-path_files = os.listdir(path + '/arquivos')
-p = path + '/arquivos/nat_br_inputhub_CPC7_20210925.csv'
-# print(p)
-
-# Inicio dos
 
 
 def check_empresa(_):
@@ -137,12 +137,6 @@ def check_csv(_):
         print('Este cara aqui tipo csv-> ' + _)
 
 
-# Falta Fazer:
-#
-#    - checar se o total de columas do input_hub
-#    - é igual ao numero de colunas de output_hub
-
-
 def check_n_col_inpuHub_outputHub():
     import pandas as pd
     # path = os.path.dirname(os.path.abspath(__file__))
@@ -165,23 +159,20 @@ def check_n_col_inpuHub_outputHub():
     # df = pd.read_csv(p, sep=";")
 
 
-# def read_file(file_name='nat_br_input_hub_CPC7_20210925.csv'):
-
-
 def check_csv_null(file_name):
     import pandas as pd
     import chardet
 
-    #df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+    # df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
 
     # use characterbit
     df = pd.read_csv(file_name, encoding="utf-16", sep=";")
 
     chardet.UniversalDetector()
 
-    #df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+    # df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
 
-    #df = df.isnull()
+    # df = df.isnull()
     # print(df.count(True))
     # print(df.size)
     print(df)
@@ -190,31 +181,29 @@ def check_csv_null(file_name):
     # print(df[df == "Taz"])
 
 
-def read_file(file_name):
+def read_file(file_name, encoding):
     import pandas as pd
     # path = os.path.dirname(os.path.abspath(__file__))
     # path_files = os.listdir(path + '/arquivos')
     # p = path + '/arquivos/nat_br_inputhub_CPC7_20210925.csv'
     # file_name = 'heart.csv'  # Esta ok esta aqui
-    # p = 'nat_br_input_crm_20191005 .csv'  # Este aqui esta ok !!
+    p = 'nat_br_input_crm_20191005 .csv'  # Este aqui esta ok !!
     # p = 'nat_br_input_hub_CPC7_20210925.csv'
     # To check the files's encoding and
     #   respective error handling
-
-    """
-        Sugestao do Douglas => chardet
-
-        Primeiro ver se o csv é realmente null.
-            Para tanto eu tenho que validar se a quantidade de Null que
-                aparecera na planilha no tipo utc,  sera maior que not null em cada tipo de utc
-                Se o resultado for null para os tipos de utcs, entao a planilha é realmente null
-    """
+    print('--------------------------------------------------------------------------------- ')
+    print('read_file file name-> ', file_name)
+    print('--------------------------------------------------------------------------------- ')
+    print('read_file encoding->', encoding)
 
     try:
-        df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+        print(encoding == 'ISO-8859-1')
+        #df = pd.read_csv(file_name, encoding, sep=";")
+        df = pd.read_csv(file_name, encoding='ISO-8859-1', sep=";")
+        # df = pd.read_csv(p, encoding="ISO-8859-1", sep=";")
+        print(df)
     except:
         print('Deu ruim')
-        pass
         # df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
 
         '''
@@ -267,37 +256,38 @@ def checkColInpOutHubLen():
 
 
 def check_path_files(files: list = []) -> str:
+    """
+        Realiza a sequencias de testes para
+            antes do run.
+    """
     for _ in files:
-        print('----------------------')
-        check_empresa(_)
-        check_pais(_)
-        check_nome_arquivo(_)
-        check_data_formato(_)
-        check_csv(_)
-        print(' ')
+
+        encoding = check_csv_enc_type(_)
+        read_file(_, encoding)
+        # check_empresa(_)
+        # check_pais(_)
+        # check_nome_arquivo(_)
+        # check_data_formato(_)
+        # check_csv(_)
+
+# p = path + '/arquivos/nat_br_inputhub_CPC7_20210925.csv'
 
 
-# check_path_files(path_files)
-
-# check_n_col_inpuHub_outputHub2()
-# check_equal_col_inpOutHub()
-# checkColInpOutHubLen()
 # f = 'nat_br_input_crm_20191005 .csv'
-
-
-# Esta lendo
-
-f = 'nat_br_input_crm_20191005 .csv'
-
-#f = 'nat_br_input_hub_CPC7_20210925.csv'
-
-# print(check_csv_null(f))
+# f = 'nat_br_input_crm_20191005 .csv'
+# f = 'nat_br_input_hub_CPC7_20210925.csv'
 
 # print(read_file(f))
-# detect_encoding(f)
+
+# print(check_csv_enc_type(f))
 
 
-# check_csv_enc_type(f)
-print(
-    check_csv_enc_type(f)
-)
+# Inicio do Run
+
+path = os.path.dirname(os.path.abspath(__file__))
+
+path_files = os.listdir(path + '/arquivos')
+# retorna uma lista com os nomes dos arquivos dos diretorio
+
+
+check_path_files(path_files)
