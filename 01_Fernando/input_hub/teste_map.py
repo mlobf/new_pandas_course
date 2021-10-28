@@ -1,4 +1,6 @@
 import os
+from re import A
+from chardet import UniversalDetector
 from datetime import datetime
 import logging
 import pandas as pb
@@ -10,6 +12,23 @@ ARQUIVOS = ['links.csv', 'input_crm', 'input_hub', 'output_hub', 'output_crm']
 TIPO_ARQUIVOS = ['csv']
 PD = pb
 
+# ------------------------------------------------------------
+
+
+def detect_encoding(filename):
+
+    detector = UniversalDetector()
+    with open(f, 'rb') as file:
+        for line in file:
+            detector.feed(line)
+            if detector.done:
+                break
+        detector.close()
+        result = detector.result
+        print('Encoding: ' + str(result['encoding']) + '\n')
+
+
+# ------------------------------------------------------------
 """
     to do:
 
@@ -135,12 +154,24 @@ def check_n_col_inpuHub_outputHub():
 
 def check_csv_null(file_name):
     import pandas as pd
+    import chardet
 
-    df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
-    df = df.isnull()
-    # print(df)
+    #df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
 
-    print(df[df == "Taz"])
+    # use characterbit
+    df = pd.read_csv(file_name, encoding="utf-16", sep=";")
+
+    chardet.UniversalDetector()
+
+    #df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+
+    #df = df.isnull()
+    # print(df.count(True))
+    # print(df.size)
+    print(df)
+    # df.value_counts()
+
+    # print(df[df == "Taz"])
 
 
 def read_file(file_name):
@@ -150,7 +181,7 @@ def read_file(file_name):
     # p = path + '/arquivos/nat_br_inputhub_CPC7_20210925.csv'
     # file_name = 'heart.csv'  # Esta ok esta aqui
     # p = 'nat_br_input_crm_20191005 .csv'  # Este aqui esta ok !!
-    #p = 'nat_br_input_hub_CPC7_20210925.csv'
+    # p = 'nat_br_input_hub_CPC7_20210925.csv'
     # To check the files's encoding and
     #   respective error handling
 
@@ -158,7 +189,7 @@ def read_file(file_name):
         Sugestao do Douglas => chardet
 
         Primeiro ver se o csv é realmente null.
-            Para tanto eu tenho que validar se a quantidade de Null que 
+            Para tanto eu tenho que validar se a quantidade de Null que
                 aparecera na planilha no tipo utc,  sera maior que not null em cada tipo de utc
                 Se o resultado for null para os tipos de utcs, entao a planilha é realmente null
     """
@@ -168,7 +199,7 @@ def read_file(file_name):
     except:
         print('Deu ruim')
         pass
-        #df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+        # df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
 
         '''
 
@@ -197,7 +228,7 @@ def read_file(file_name):
 def checkColInpOutHubLen():
     p1 = 'nat_br_input_hub_CPC7_20210925.csv'
     p2 = 'nat_br_input_crm_20191005.csv'
-    #nat_br_input_crm_20191005 .csv
+    # nat_br_input_crm_20191005 .csv
     print(read_file(p2))
     # print(p2)
 
@@ -215,7 +246,6 @@ def checkColInpOutHubLen():
 
     print(len(df.columns))
     '''
-
 
 # ---------------------------------------------------------------------------------
 
@@ -236,13 +266,16 @@ def check_path_files(files: list = []) -> str:
 # check_n_col_inpuHub_outputHub2()
 # check_equal_col_inpOutHub()
 # checkColInpOutHubLen()
-#f = 'nat_br_input_crm_20191005 .csv'
+# f = 'nat_br_input_crm_20191005 .csv'
 
 
 # Esta lendo
 
-#f = 'nat_br_input_crm_20191005 .csv'
+f = 'nat_br_input_crm_20191005 .csv'
 
-f = 'nat_br_input_hub_CPC7_20210925.csv'
+#f = 'nat_br_input_hub_CPC7_20210925.csv'
+
+# print(check_csv_null(f))
+
 # print(read_file(f))
-print(check_csv_null(f))
+detect_encoding(f)
