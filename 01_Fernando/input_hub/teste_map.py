@@ -138,9 +138,10 @@ def check_csv_null(file_name):
 
     df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
     df = df.isnull()
-    # print(df)
+    df.
+    print(df)
 
-    print(df[df == "Taz"])
+    # print(df[df == "Taz"])
 
 
 def read_file(file_name):
@@ -171,7 +172,6 @@ def read_file(file_name):
         #df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
 
         '''
-
         try:
             df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
         except:
@@ -179,7 +179,6 @@ def read_file(file_name):
             # df = pd.read_csv(file_name, encoding="utf-16", sep=";")
 
         '''
-
     else:
         return df
 
@@ -240,6 +239,7 @@ def check_path_files(files: list = []) -> str:
 
 
 # Esta lendo
+
 
 #f = 'nat_br_input_crm_20191005 .csv'
 
