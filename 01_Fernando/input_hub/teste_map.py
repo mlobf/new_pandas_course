@@ -1,9 +1,7 @@
-from base64 import encode
 from fileinput import filename
 from json import detect_encoding
 import os
 from re import A
-from turtle import pd
 from chardet import UniversalDetector
 from datetime import datetime
 import logging
@@ -64,7 +62,8 @@ def check_csv_enc_type(file_name: str) -> str:
     detector = UniversalDetector()
     path = os.path.dirname(os.path.abspath(__file__))
 
-    full_path = path + '/arquivos'+'/' + file_name
+    # full_path = path + '/arquivos'+'/' + file_name
+    full_path = path + '/' + file_name
     # print(full_path)
 
     with open(full_path, 'rb') as file:
@@ -75,6 +74,7 @@ def check_csv_enc_type(file_name: str) -> str:
                 break
         detector.close()
         result = detector.result
+        print(result)
         if result['confidence'] < 0.68:
             # condicional para ver se a analise é boa.
             # caso nao seja, interromper o processo e dar a mensagem de alerta.
@@ -82,8 +82,9 @@ def check_csv_enc_type(file_name: str) -> str:
             return print('Falta confiança na analise da planilha ', file_name, ' Resultado da analise é', result['confidence'])
         else:
             # para debugar
-            print(' ')
-            print("check_csv_enc_type ->", result['encoding'])
+            # print(file_name)
+            # print(result)
+            # print("check_csv_enc_type ->", result['encoding'])
             return result['encoding']
 
 
@@ -109,15 +110,16 @@ def check_nome_arquivo(_):
 
 
 def check_data_formato(_):
+    pass
+    '''
     # Separar a data na str
     print(_[-12:-4])  # Toda a data
     # So pode valer para os tipo csvs
-    try:
-        # Validar o input da data
-        int(_[-12:-4])
-        # Ano
-        # print((datetime.today()).year)
-        if _[-12:-8] in range((datetime.today().year), 2029) == True:
+      # Validar o input da data
+      int(_[-12:-4])
+       # Ano
+       # print((datetime.today()).year)
+       if _[-12:-8] in range((datetime.today().year), 2029) == True:
             pass
         # Mês
         _[-8:-6] in range(1, 12) == True
@@ -127,6 +129,12 @@ def check_data_formato(_):
     except Exception:
         # Usar a porcaria da lib de logging
         print('Deu ruim Data formato -> ' + _)
+    
+    
+    
+    
+    
+    '''
 
 
 def check_csv(_):
@@ -186,27 +194,20 @@ def read_file(file_name, encoding):
     # path = os.path.dirname(os.path.abspath(__file__))
     # path_files = os.listdir(path + '/arquivos')
     # p = path + '/arquivos/nat_br_inputhub_CPC7_20210925.csv'
-    # file_name = 'heart.csv'  # Esta ok esta aqui
-    p = 'nat_br_input_crm_20191005 .csv'  # Este aqui esta ok !!
-    # p = 'nat_br_input_hub_CPC7_20210925.csv'
+    # p = 'nat_br_input_crm_20191005 .csv'  # Este aqui esta ok !!
+    p = 'nat_br_input_hub_CPC7_20210925.csv'
     # To check the files's encoding and
     #   respective error handling
-    print('--------------------------------------------------------------------------------- ')
-    print('read_file file name-> ', file_name)
-    print('--------------------------------------------------------------------------------- ')
-    print('read_file encoding->', encoding)
 
-    try:
-        print(encoding == 'ISO-8859-1')
-        #df = pd.read_csv(file_name, encoding, sep=";")
-        df = pd.read_csv(file_name, encoding='ISO-8859-1', sep=";")
-        # df = pd.read_csv(p, encoding="ISO-8859-1", sep=";")
-        print(df)
-    except:
-        print('Deu ruim')
-        # df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
+    # print(encoding == 'ISO-8859-1')
+    # df = pd.read_csv(file_name, encoding, sep=";")
+    # df = pd.read_csv(file_name, encoding='ISO-8859-1', sep=";")
+    # df = pd.read_csv(file_name, encoding="utf-16", sep=";")
+    # df = pd.read_csv(file_name, encoding="utf-16", sep=";")
+    # df = pd.read_csv(p, encoding="ISO-8859-1", sep=";")
+    # print(df)
 
-        '''
+    '''
 
         try:
             df = pd.read_csv(file_name, encoding="ISO-8859-1", sep=";")
@@ -216,16 +217,11 @@ def read_file(file_name, encoding):
 
         '''
 
-    else:
-        return df
-
-    # assert(pd.read_csv(p, encoding="ISO-8859-1", sep=";"))
     # df=pd.read_csv(p, encoding="ISO-8859-1", sep=";")
-    # print(df)
     # df = pd.read_csv(p, encoding="utf-16", sep=";")
-    # print(df)
+    df = pd.read_csv(p, encoding="utf-16", sep=";")
+    print(df)
     # O problema foi o encoding
-    # df = pd.read_csv(p, encoding="utf-16", sep=";")
     # sep=';', index=False, encoding='utf-16')
     # df = pd.read_csv(p, sep=";")
 
@@ -258,12 +254,14 @@ def checkColInpOutHubLen():
 def check_path_files(files: list = []) -> str:
     """
         Realiza a sequencias de testes para
-            antes do run.
+        antes do run.
     """
-    for _ in files:
 
-        encoding = check_csv_enc_type(_)
-        read_file(_, encoding)
+    for f in files:
+
+        # print('check_path_files ', f)
+        encoding = check_csv_enc_type(f)
+        read_file(f, encoding)
         # check_empresa(_)
         # check_pais(_)
         # check_nome_arquivo(_)
@@ -286,8 +284,17 @@ def check_path_files(files: list = []) -> str:
 
 path = os.path.dirname(os.path.abspath(__file__))
 
-path_files = os.listdir(path + '/arquivos')
-# retorna uma lista com os nomes dos arquivos dos diretorio
+# path_files = os.listdir(path + '/arquivos')
+path_files = os.listdir(path)
 
+# Separar somente os csv's.
+lista_csv = []
+for x in path_files:
+    if x[-4:] == '.csv':
+        lista_csv.append(x)
 
-check_path_files(path_files)
+# lista_csv
+# retorna uma lista com os nomes dos arquivos csv's que estao no diretorio
+# ['nat_br_input_crm_20211005.csv', 'nat_br_input_hub_CPC7_20210925.csv', 'nat_br_links.csv']
+
+check_path_files(lista_csv)
