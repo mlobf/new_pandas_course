@@ -30,5 +30,20 @@ print(df.info())
 
 # To add a row in conjuntion with a column, use the axis parameter
 # with 1 value
-df = df.dropna(subset=["last_review"], axis=1).info()
+# df = df.dropna(subset=["last_review"], axis=0).info()
+
+print(df.columns)
+
+# to use a subset
+
+
+# to fill a nan with a 0.
+# df = df.fillna(0)
+
 print(df)
+
+
+# Generic Replace
+print(df.host_name.replace('John', 'Garibaldo').head(1))
+
+# Thresholding
