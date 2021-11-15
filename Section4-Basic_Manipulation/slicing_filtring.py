@@ -67,4 +67,8 @@ df2 = df.copy()
 
 # df2 = df2.loc[df2.index == 0, "name"] = 'TESTING 2'
 
-print((df2[df2.host_name == "John"]))
+# print((df2[df2.host_name == "John"]))
+
+print(
+    (df.host_name == 'Taz').sum()
+)
