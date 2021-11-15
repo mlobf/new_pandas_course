@@ -32,30 +32,3 @@ df = pd.read_csv("astronauts.csv")
 
 # To get the Max value of all columns.
 print(df.max())
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
